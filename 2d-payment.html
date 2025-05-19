@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>2D Ödeme</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.paypal.com/sdk/js?client-id=ARyd4Mc2kfx56rC88u6JYUMYhzdd7Nir-fV6v7eFUwnRsdfbDqE1XanIlIKcLs2Jco6pO5uQXWdzEYnF"></script>
+</head>
+<body>
+  <nav><ul><li><a href="index.html">Ana Sayfa</a></li></ul></nav>
+  <main>
+    <h2>2D PayPal Ödeme</h2>
+    <label>TL Tutarı: <input type="number" id="tlAmount" oninput="convertToUSD()"></label>
+    <p id="usdAmount">USD Karşılığı: 0</p>
+    <div id="paypal-button-container"></div>
+    <script>
+      let usd = "1.00";
+      let exchangeRate = 0;
+
+      fetch('https://api.exchangerate-api.com/v4/latest/TRY')
+        .then(response => response.json())
+        .then(data => {
+          exchangeRate = data.rates.USD;
+        });
+
+      function convertToUSD() {
+        const tl = parseFloat(document.getElementById("tlAmount").value);
+        usd = (tl * exchangeRate).toFixed(2);
+        document.getElementById("usdAmount").innerText = "USD Karşılığı: " + usd;
+      }
+
+      setTimeout(() => {
+        paypal.Buttons({
+          createOrder: function(data, actions) {
+            if (!usd || usd === "0.00") {
+              alert("Lütfen önce geçerli bir TL tutarı girin.");
+              return;
+            }
+            return actions.order.create({
+              purchase_units: [{ amount: { value: usd } }]
+            });
+          },
+          onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+              if (details.status === "COMPLETED") {
+                alert('Ödeme başarılı: ' + details.payer.name.given_name);
+              } else {
+                alert('Ödeme tamamlanamadı.');
+              }
+            });
+          }
+        }).render('#paypal-button-container');
+      }, 1000);
+    </script>
+  </main>
+</body>
+</html>

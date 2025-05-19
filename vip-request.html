@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Bağış Talebi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+<nav class="navbar">
+  <ul>
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="register.html">Kayıt Ol</a></li>
+    <li><a href="2d-payment.html">2D Ödeme</a></li>
+    <li><a href="3d-payment.html">3D Ödeme</a></li>
+    <li><a href="qr-payment.html">QR Ödeme</a></li>
+    <li><a href="vip-request.html">VIP Form</a></li>
+    <li><a href="usd-converter.html">TL → USD</a></li>
+    <li><a href="admin.html">Admin</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2>VIP Bağış Talep Formu</h2>
+    <form id="vipForm">
+      <label>Ad Soyad:</label>
+      <input type="text" id="vipName" required>
+      <label>Bağış Sebebi:</label>
+      <input type="text" id="vipReason" required>
+      <label>Bağış Tutarı (TL):</label>
+      <input type="number" id="vipAmount" required>
+      <button type="submit">Gönder</button>
+    </form>
+    <script>
+      document.getElementById('vipForm').onsubmit = function(e) {
+        e.preventDefault();
+        const talepler = JSON.parse(localStorage.getItem('vipTalepler') || '[]');
+        talepler.push({
+          name: document.getElementById('vipName').value,
+          reason: document.getElementById('vipReason').value,
+          amount: document.getElementById('vipAmount').value
+        });
+        localStorage.setItem('vipTalepler', JSON.stringify(talepler));
+        alert('VIP talebiniz kaydedildi!');
+        document.getElementById('vipForm').reset();
+      };
+    </script>
+  </main>
+</body>
+</html>

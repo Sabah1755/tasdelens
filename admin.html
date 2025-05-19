@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+<nav class="navbar">
+  <ul>
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="register.html">Kayıt Ol</a></li>
+    <li><a href="2d-payment.html">2D Ödeme</a></li>
+    <li><a href="3d-payment.html">3D Ödeme</a></li>
+    <li><a href="qr-payment.html">QR Ödeme</a></li>
+    <li><a href="vip-request.html">VIP Form</a></li>
+    <li><a href="usd-converter.html">TL → USD</a></li>
+    <li><a href="admin.html">Admin</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2>Admin Panel</h2>
+    <input type="password" id="adminPass" placeholder="Şifre girin">
+    <button onclick="loginAdmin()">Giriş Yap</button>
+    <div id="panel" style="display:none;">
+      <h3>Kayıt Olanlar</h3>
+      <ul id="kayitListesi"></ul>
+      <h3>VIP Talepleri</h3>
+      <ul id="vipListesi"></ul>
+    </div>
+    <script>
+      function loginAdmin() {
+        if (document.getElementById('adminPass').value === 'ApoMelis171123') {
+          document.getElementById('panel').style.display = 'block';
+          const kayitlar = JSON.parse(localStorage.getItem('kayitlar') || '[]');
+          const vip = JSON.parse(localStorage.getItem('vipTalepler') || '[]');
+          document.getElementById('kayitListesi').innerHTML = kayitlar.map(k => 
+            `<li>${k.name} – ${k.email} – ${k.tc}</li>`).join('');
+          document.getElementById('vipListesi').innerHTML = vip.map(v =>
+            `<li>${v.name} – ${v.reason} – ${v.amount} TL</li>`).join('');
+        } else {
+          alert('Şifre yanlış!');
+        }
+      }
+    </script>
+  </main>
+</body>
+</html>
